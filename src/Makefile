@@ -48,12 +48,17 @@ INSTALL_PROGRAM ?= $(INSTALL)
 INSTALL_DATA ?= $(INSTALL) -m 644
 
 LDFLAGS += -F./Headers -F/System/Library/PrivateFrameworks -framework IOKit -framework ApplicationServices -framework DisplayServices -framework CoreDisplay -framework OSD -framework MonitorPanel -framework SkyLight
+AR = ar
+ARFLAGS = rcs
 
 .PHONY: all
 all: displayplacer
 
 displayplacer:
 	$(CC) -I. $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) DisplayPlacer.c Legacy/v130.c -x objective-c MonitorPanel.m -o $@ $< -F./Headers -F/System/Library/PrivateFrameworks -framework IOKit -framework ApplicationServices -framework DisplayServices -framework CoreDisplay -framework OSD -framework MonitorPanel -framework SkyLight $(WARNINGS)
+
+DisplayPlacer.a: DisplayPlacer.o
+	$(AR) $(ARFLAGS) libDisplayPlacer.a DisplayPlacer.o
 
 DisplayPlacer.dylib: DisplayPlacer.o
 	$(CC) $(LDFLAGS) -dynamiclib -o libDisplayPlacer.dylib DisplayPlacer.o MonitorPanel.o
@@ -73,4 +78,4 @@ install: displayplacer
 clean:
 	rm -f displayplacer \
 		v130.o DisplayPlacer.o MonitorPanel.o \
-		DisplayPlacer.dylib
+		DisplayPlacer.dylib libDisplayPlacer.a
