@@ -1,5 +1,12 @@
 bindir ?= /usr/local/bin
 
+AR = ar
+ARFLAGS = rcs
+
+INSTALL ?= install
+INSTALL_PROGRAM ?= $(INSTALL)
+INSTALL_DATA ?= $(INSTALL) -m 644
+
 # Compiler flags:
 #  -Wall turns on most but not all compiler warnings
 #  -Wno-deprecated-declarations is used because CGDisplayIOServicePort was
@@ -43,39 +50,37 @@ WARNINGS += -Wlogical-not-parentheses
 WARNINGS += -Wnull-dereference
 #WARNINGS += -Wextra #TODO enable after fixing these warnings
 
-INSTALL ?= install
-INSTALL_PROGRAM ?= $(INSTALL)
-INSTALL_DATA ?= $(INSTALL) -m 644
+INCLUDES := -I. -F./Headers -F/System/Library/PrivateFrameworks
+FRAMEWORKS := -framework IOKit -framework ApplicationServices -framework DisplayServices
+FRAMEWORKS += -framework CoreDisplay -framework OSD -framework MonitorPanel -framework SkyLight
 
-LDFLAGS += -F./Headers -F/System/Library/PrivateFrameworks -framework IOKit -framework ApplicationServices -framework DisplayServices -framework CoreDisplay -framework OSD -framework MonitorPanel -framework SkyLight
-AR = ar
-ARFLAGS = rcs
+CFLAGS := $(WARNINGS)
+LDFLAGS := $(INCLUDES) $(FRAMEWORKS)
 
-.PHONY: all
-all: displayplacer
+OUTPUT_EXEC := displayplacer
+STATIC_LIB := libDisplayPlacer.a
+DYNAMIC_LIB := libDisplayPlacer.dylib
 
-displayplacer:
-	$(CC) -I. $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) DisplayPlacer.c Legacy/v130.c -x objective-c MonitorPanel.m -o $@ $< -F./Headers -F/System/Library/PrivateFrameworks -framework IOKit -framework ApplicationServices -framework DisplayServices -framework CoreDisplay -framework OSD -framework MonitorPanel -framework SkyLight $(WARNINGS)
+.PHONY: all clean debug install
+all: $(OUTPUT_EXEC)
 
-DisplayPlacer.a: DisplayPlacer.o
-	$(AR) $(ARFLAGS) libDisplayPlacer.a DisplayPlacer.o
+$(OUTPUT_EXEC):
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) DisplayPlacer.c Legacy/v130.c -x objective-c MonitorPanel.m -o $(OUTPUT_EXEC)
 
-DisplayPlacer.dylib: DisplayPlacer.o
-	$(CC) $(LDFLAGS) -dynamiclib -o libDisplayPlacer.dylib DisplayPlacer.o MonitorPanel.o
+$(STATIC_LIB): DisplayPlacer.o
+	$(AR) rcs $(STATIC_LIB) DisplayPlacer.o
+
+$(DYNAMIC_LIB): DisplayPlacer.o
+	$(CC) $(LDFLAGS) -dynamiclib -o $(DYNAMIC_LIB) DisplayPlacer.o MonitorPanel.o v130.o
 
 DisplayPlacer.o:
-	$(CC) -I. $(CFLAGS) -F./Headers -F/System/Library/PrivateFrameworks -c DisplayPlacer.c Legacy/v130.c -x objective-c MonitorPanel.m
+	$(CC) $(CFLAGS) -c DisplayPlacer.c Legacy/v130.c -x objective-c MonitorPanel.m $(INCLUDES)
 
-.PHONY: debug
 debug: CFLAGS += -g
-debug: displayplacer
+debug: $(OUTPUT_EXEC)
 
-.PHONY: install
-install: displayplacer
-	$(INSTALL_PROGRAM) $< $(DESTDIR)$(bindir)
+install: $(OUTPUT_EXEC)
+	$(INSTALL_PROGRAM) $(OUTPUT_EXEC) $(DESTDIR)$(bindir)
 
-.PHONY: clean
 clean:
-	rm -f displayplacer \
-		v130.o DisplayPlacer.o MonitorPanel.o \
-		DisplayPlacer.dylib libDisplayPlacer.a
+	rm -f $(OUTPUT_EXEC) *.o $(STATIC_LIB) $(DYNAMIC_LIB)
