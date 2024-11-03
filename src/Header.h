@@ -1,5 +1,3 @@
-#define EXPORT __attribute__((visibility("default")))
-
 // Thanks to Phoenix Dev for modes_D4 type for use in Apple's private core graphics APIs
 typedef union
 {
@@ -69,29 +67,29 @@ typedef struct
 } ScreenConfig;
 
 // DisplayPlacer.c
-EXPORT void printHelp();
-EXPORT void printVersion();
-EXPORT void listScreens();
-EXPORT void printCurrentProfile();
-EXPORT CGDirectDisplayID convertUUIDtoID(char *uuid);
-EXPORT CGDirectDisplayID convertSerialToID(char *serialIdString);
-EXPORT bool validateScreenOnline(CGDirectDisplayID onlineDisplayList[], CGDisplayCount screenCount, CGDirectDisplayID screenId, char *screenUUID, bool quietMissingScreen);
-EXPORT bool isScreenEnabled(CGDirectDisplayID screenId);
-EXPORT bool unsetMirrors(ScreenConfig *screenConfigs, int argc, CGDirectDisplayID screenList[], CGDisplayCount screenCount);
-EXPORT bool unsetMirror(CGDisplayConfigRef configRef, CGDirectDisplayID mirrorScreenId, char *mirrorScreenUUID);
-EXPORT bool setEnableds(ScreenConfig *screenConfigs, int argc, CGDirectDisplayID screenList[], CGDisplayCount screenCount);
-EXPORT bool setEnabled(CGDisplayConfigRef configRef, CGDirectDisplayID screenId, char *screenUUID, bool isEnabled);
-EXPORT bool setRotations(ScreenConfig *screenConfigs, int argc, CGDirectDisplayID screenList[], CGDisplayCount screenCount);
-EXPORT bool setMirrors(ScreenConfig *screenConfigs, int argc, CGDisplayConfigRef configRef, CGDirectDisplayID screenList[], CGDisplayCount screenCount);
-EXPORT bool setMirror(CGDisplayConfigRef configRef, CGDirectDisplayID primaryScreenId, char *primaryScreenUUID, CGDirectDisplayID mirrorScreenId, char *mirrorScreenUUID);
-EXPORT bool setResolutions(ScreenConfig *screenConfigs, int argc, CGDisplayConfigRef configRef, CGDirectDisplayID screenList[], CGDisplayCount screenCount);
-EXPORT bool setResolution(CGDisplayConfigRef configRef, CGDirectDisplayID screenId, char *screenUUID, int width, int height, int hz, int depth, bool scaled, int modeNum);
-EXPORT bool setPositions(ScreenConfig *screenConfigs, int argc, CGDisplayConfigRef configRef, CGDirectDisplayID screenList[], CGDisplayCount screenCount);
-EXPORT bool setPosition(CGDisplayConfigRef configRef, CGDirectDisplayID screenId, char *screenUUID, int x, int y);
+void printHelp();
+void printVersion();
+void listScreens();
+void printCurrentProfile();
+CGDirectDisplayID convertUUIDtoID(char *uuid);
+CGDirectDisplayID convertSerialToID(char *serialIdString);
+bool validateScreenOnline(CGDirectDisplayID onlineDisplayList[], CGDisplayCount screenCount, CGDirectDisplayID screenId, char *screenUUID, bool quietMissingScreen);
+bool isScreenEnabled(CGDirectDisplayID screenId);
+bool unsetMirrors(ScreenConfig *screenConfigs, int argc, CGDirectDisplayID screenList[], CGDisplayCount screenCount);
+bool unsetMirror(CGDisplayConfigRef configRef, CGDirectDisplayID mirrorScreenId, char *mirrorScreenUUID);
+bool setEnableds(ScreenConfig *screenConfigs, int argc, CGDirectDisplayID screenList[], CGDisplayCount screenCount);
+bool setEnabled(CGDisplayConfigRef configRef, CGDirectDisplayID screenId, char *screenUUID, bool isEnabled);
+bool setRotations(ScreenConfig *screenConfigs, int argc, CGDirectDisplayID screenList[], CGDisplayCount screenCount);
+bool setMirrors(ScreenConfig *screenConfigs, int argc, CGDisplayConfigRef configRef, CGDirectDisplayID screenList[], CGDisplayCount screenCount);
+bool setMirror(CGDisplayConfigRef configRef, CGDirectDisplayID primaryScreenId, char *primaryScreenUUID, CGDirectDisplayID mirrorScreenId, char *mirrorScreenUUID);
+bool setResolutions(ScreenConfig *screenConfigs, int argc, CGDisplayConfigRef configRef, CGDirectDisplayID screenList[], CGDisplayCount screenCount);
+bool setResolution(CGDisplayConfigRef configRef, CGDirectDisplayID screenId, char *screenUUID, int width, int height, int hz, int depth, bool scaled, int modeNum);
+bool setPositions(ScreenConfig *screenConfigs, int argc, CGDisplayConfigRef configRef, CGDirectDisplayID screenList[], CGDisplayCount screenCount);
+bool setPosition(CGDisplayConfigRef configRef, CGDirectDisplayID screenId, char *screenUUID, int x, int y);
 
 // MonitorPanel.m
-EXPORT bool setRotation(CGDirectDisplayID screenId, char *screenUUID, int degree);
+bool setRotation(CGDirectDisplayID screenId, char *screenUUID, int degree);
 
 // Old version implementations for backward compatability with programmatic usage of displayplacer
-EXPORT void v130_listScreens();
-EXPORT void v130_printCurrentProfile();
+void v130_listScreens();
+void v130_printCurrentProfile();
